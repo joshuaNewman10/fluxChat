@@ -1,14 +1,14 @@
 /** @jsx React.DOM */
 var React = require('react');
-var AppActions = require('../actions/app-actions.js');
-console.log(AppActions);
+var Catalog = require('../components/app-catalog.js');
 var APP = 
   React.createClass({
-    handleClick: function() {
-      AppActions.addItem('this is the item');
-    },
     render: function() {
-      return <h1 onClick={this.handleClick}>Hello World Im the APP component</h1>
+      return (
+              <div>
+              <h1>Shopping Time!</h1>
+              <Catalog />
+              </div>);
     }
   });
 

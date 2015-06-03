@@ -1,5 +1,5 @@
-var AppDispatcher = require('../dispatcher/app-dispatcher');
-var AppConstants = require('../constants/app-constans');
+var AppDispatcher = require('../dispatchers/app-dispatcher');
+var AppConstants = require('../constants/app-constants');
 var assign = require('object-assign');
 var EventEmitter = require('events').EventEmitter; //Node
 
@@ -51,7 +51,7 @@ function _addItem(item) {
 End Database Stuff
 *****************/
 
-var appStore = assign(EventEmitter.prototype, {
+var AppStore = assign(EventEmitter.prototype, {
   emitChange: function() {
     this.emit(CHANGE_EVENT);
   },
@@ -74,13 +74,13 @@ var appStore = assign(EventEmitter.prototype, {
 
   dispatcherIndex: AppDispatcher.register(function(payload){
     var action = payload.action; //action from handleViewAction
-    if ( action.actionType === APPCONSTANTS.ADD_ITEM ) {
+    if ( action.actionType === AppConstants.ADD_ITEM ) {
       _addItem(payload.action.item);
-    } else if ( action.actionType === APPCONSTANTS.REMOVE_ITEM ) {
+    } else if ( action.actionType === AppConstants.REMOVE_ITEM ) {
       _removeItem(payload.action.index);
-    } else if ( action.actionType === APPCONSTANTS.INCREASE_ITEM ) {
+    } else if ( action.actionType === AppConstants.INCREASE_ITEM ) {
       _increaseItem(payload.action.index);
-    } else if ( action.actionType === APPCONSTANTS.DECREASE_ITEM ) {
+    } else if ( action.actionType === AppConstants.DECREASE_ITEM ) {
       _decreaseItem(payload.action.index);
     }
     AppStore.emitChange();

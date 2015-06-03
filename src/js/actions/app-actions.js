@@ -14,13 +14,13 @@ var AppActions = {
       itemIndex: itemIndex
     });
   },
-  IncreaseItem: function(itemIndex) {
+  increaseItem: function(itemIndex) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.INCREASE_ITEM,
       itemIndex: itemIndex
     });
   },
-  DecreaseItem: function(itemIndex) {
+  decreaseItem: function(itemIndex) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.DECREASE_ITEM,
       itemIndex: itemIndex
