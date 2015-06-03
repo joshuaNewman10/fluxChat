@@ -11,6 +11,9 @@ var _catalog = [
   {id:3, title:'Widget #3', cost:3}
 ];
 
+/*****************
+Database Stuff
+*****************/
 var _cartItems = []; //this is our db, should be in its own file
 
 function _removeItem(index) {
@@ -43,5 +46,49 @@ function _addItem(item) {
     });
   }
 }
+
+/*****************
+End Database Stuff
+*****************/
+
+var appStore = assign(EventEmitter.prototype, {
+  emitChange: function() {
+    this.emit(CHANGE_EVENT);
+  },
+
+  addChangeListener: function(callback) {
+    this.on(CHANGE_EVENT, callback);
+  },
+
+  removeChangeListener: function(callback) {
+    this.removeListener(CHANGE_EVENT, callback);
+  },
+
+  getCart: function() {
+    return _cartItems;
+  },
+
+  getCatalog: function() {
+    return _catalog;
+  },
+
+  dispatcherIndex: AppDispatcher.register(function(payload){
+    var action = payload.action; //action from handleViewAction
+    if ( action.actionType === APPCONSTANTS.ADD_ITEM ) {
+      _addItem(payload.action.item);
+    } else if ( action.actionType === APPCONSTANTS.REMOVE_ITEM ) {
+      _removeItem(payload.action.index);
+    } else if ( action.actionType === APPCONSTANTS.INCREASE_ITEM ) {
+      _increaseItem(payload.action.index);
+    } else if ( action.actionType === APPCONSTANTS.DECREASE_ITEM ) {
+      _decreaseItem(payload.action.index);
+    }
+    AppStore.emitChange();
+    return true; //everything is promisified so needs to resoolve
+  })
+
+});
+
+module.exports = AppStore;
 
 
