@@ -59,6 +59,15 @@ function _addItem(item) {
   }
 }
 
+function _cartTotals() {
+  var qty = 0, total = 0;
+  _cartItems.forEach(function(cartItem) {
+    qry+=cartItem.qty;
+    total+=cartItem.qty*cartItem.cost;
+  });
+  return {'qty': qty, 'total': total};
+}
+
 /*****************
 End Database Stuff
 *****************/
@@ -82,6 +91,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
   getCatalog: function() {
     return _catalog;
+  },
+
+  getCartTotals: function() {
+    return _cartTotals();
   },
 
   dispatcherIndex: AppDispatcher.register(function(payload){

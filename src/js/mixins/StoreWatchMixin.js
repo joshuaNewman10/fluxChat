@@ -18,7 +18,7 @@ var StoreWatchMixin = function(cb) {
     },
 
     _onChange: function() {
-      this.setState(cb());
+      this.setState(cb(this)); //this will be the component
     }
   };
 };
