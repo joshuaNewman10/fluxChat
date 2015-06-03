@@ -1,6 +1,9 @@
 /** @jsx React.DOM */
 var React = require('react');
 var Link = require('react-router-component').Link;
+var StoreWatchMixin = require('../../mixins/StoreWatchMixin.js');
+var AppStore = require('../../stores/app-store.js');
+
 
 function CartTotals() {
   return AppStore.getCartTotals();
