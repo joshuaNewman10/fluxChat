@@ -5,31 +5,42 @@ var EventEmitter = require('events').EventEmitter; //Node
 
 var CHANGE_EVENT = 'change'; //will broadcast this anytime something changes
 
-var _catalog = [
-  {id:1, title:'Widget #1', cost:1},
-  {id:2, title:'Widget #2', cost:2},
-  {id:3, title:'Widget #3', cost:3}
-];
+
 
 /*****************
 Database Stuff
 *****************/
+var _catalog = [];
+
+for(var i=1; i<9; i++) {
+  _catalog.push({
+    'id': 'Widget' + i,
+    'title': 'Widget #' + i,
+    'summary': 'This is an awesome widget',
+    'description': 'Lorem ipsum dolor sit amet consectuetur elit stff',
+    'cost': 1
+  });
+}
+
 var _cartItems = []; //this is our db, should be in its own file
 
 function _removeItem(index) {
-  _cartItems[index].inCart =false;
+  _cartItems[index].inCart = false;
   _cartItems.splice(index,1);
 }
 
 function _increaseItem(index) {
+  console.log(_cartItems);
+  var item = _cartItems[index];
+  console.log('item', item, index);
   _cartItems[index].qty++;
 }
 
 function _decreaseItem(index) {
   if ( _cartItems[index].qty > 1) {
-    _cartITems[index].qty++;
+    _cartItems[index].qty--;
   } else {
-    _remoiveItem(index);
+    _removeItem(index);
   }
 }
 
@@ -38,6 +49,7 @@ function _addItem(item) {
     item.qty = 1;
     item.inCart = true;
     _cartItems.push(item);
+    console.log(item, _cartItems);
   } else {
     _cartItems.forEach(function(cartItem,i ) {
       if ( cartItem.id === item.id ) {
