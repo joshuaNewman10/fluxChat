@@ -20464,7 +20464,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../constants/app-constants.js":166,"../dispatchers/app-dispatcher.js":167}],163:[function(require,module,exports){
+},{"../constants/app-constants.js":169,"../dispatchers/app-dispatcher.js":170}],163:[function(require,module,exports){
 /** @js React.DOM */
 
 var React = require('react');
@@ -20483,6 +20483,76 @@ module.exports = AddToCart;
 
 
 },{"../actions/app-actions.js":162,"react":161}],164:[function(require,module,exports){
+/** @jsx React.DOM */
+var React = require('react');
+var AppStore = require('../stores/app-store.js');
+var RemoveFromCart = require('../components/app-increase.js');
+var Increase = require('../components/app-increase.js');
+var Decrease = require('../components/app-decrease.js');
+
+function cartItems() {
+  return {items: AppStore.getCart()};
+}
+
+var Cart = React.createClass({displayName: "Cart",
+  getInitialState: function() {
+    return cartItems();
+  },
+
+  componentWillMount: function() {
+    AppStore.addChangeListener(this._onChange);
+  },
+
+  _onChange: function() {
+    this.setState(cartItems()); //set state to cart items
+  },
+
+  render: function() {
+    var total = 0;
+    var items = this.state.items.map(function(item, i) {
+      var subTotal = item.cost*item.qty;
+      total += subTotal;
+      return (
+        React.createElement("tr", {key: i}, 
+          React.createElement("td", null, React.createElement(RemoveFromCart, {index: i})), 
+          React.createElement("td", null, item.title), 
+          React.createElement("td", null, item.qty), 
+          React.createElement("td", null, 
+            React.createElement(Increase, {index: i}), 
+            React.createElement(Decrease, {index: i})
+          ), 
+          React.createElement("td", null, "$", subTotal)
+        )
+      );
+    });
+    return (
+      React.createElement("table", {className: "table table-hover"}, 
+        React.createElement("thead", null, 
+          React.createElement("tr", null, 
+            React.createElement("th", null), 
+            React.createElement("th", null, "Item"), 
+            React.createElement("th", null, "Qty"), 
+            React.createElement("th", null), 
+            React.createElement("th", null, "SubTotal")
+          )
+        ), 
+        React.createElement("tbody", null, 
+          items
+        ), 
+        React.createElement("tfoot", null, 
+          React.createElement("tr", null, 
+            React.createElement("td", {colSpan: "4", className: "text-right"}, "Total"), 
+            React.createElement("td", null, "$", total)
+          )
+        )
+      )
+    );
+  }
+});
+
+module.exports = Cart;
+
+},{"../components/app-decrease.js":166,"../components/app-increase.js":167,"../stores/app-store.js":172,"react":161}],165:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -20513,24 +20583,63 @@ var Catalog = React.createClass({displayName: "Catalog",
 
 module.exports = Catalog;
 
-},{"../components/app-addtocart.js":163,"../stores/app-store.js":169,"react":161}],165:[function(require,module,exports){
+},{"../components/app-addtocart.js":163,"../stores/app-store.js":172,"react":161}],166:[function(require,module,exports){
+/** @js React.DOM */
+
+var React = require('react');
+var AppActions = require('../actions/app-actions.js');
+
+var Decrease = React.createClass({displayName: "Decrease",
+  handleClick: function() {
+    AppActions.decreaseItem(this.props.index);
+  },
+  render: function() {
+    return React.createElement("button", {onClick: this.handleClick}, "--")
+  }
+});
+
+module.exports = Decrease;
+
+
+},{"../actions/app-actions.js":162,"react":161}],167:[function(require,module,exports){
+/** @js React.DOM */
+
+var React = require('react');
+var AppActions = require('../actions/app-actions.js');
+
+var Increase = React.createClass({displayName: "Increase",
+  handleClick: function() {
+    AppActions.increaseItem(this.props.index);
+  },
+  render: function() {
+    return React.createElement("button", {onClick: this.handleClick}, "+")
+  }
+});
+
+module.exports = Increase;
+
+
+},{"../actions/app-actions.js":162,"react":161}],168:[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react');
 var Catalog = require('../components/app-catalog.js');
+var Cart = require('../components/app-cart.js');
 var APP = 
   React.createClass({displayName: "APP",
     render: function() {
       return (
               React.createElement("div", null, 
               React.createElement("h1", null, "Shopping Time!"), 
-              React.createElement(Catalog, null)
+              React.createElement(Catalog, null), 
+              React.createElement("h1", null, "Cart"), 
+              React.createElement(Cart, null)
               ));
     }
   });
 
 module.exports = APP;
 
-},{"../components/app-catalog.js":164,"react":161}],166:[function(require,module,exports){
+},{"../components/app-cart.js":164,"../components/app-catalog.js":165,"react":161}],169:[function(require,module,exports){
 module.exports = {
   ADD_ITEM: 'ADD_ITEM',
   REMOVE_ITEM: 'REMOVE_ITEM',
@@ -20540,14 +20649,13 @@ module.exports = {
 
 
 
-},{}],167:[function(require,module,exports){
+},{}],170:[function(require,module,exports){
 var Dispatcher = require('flux').Dispatcher;
 var assign = require('object-assign');
 
 var AppDispatcher = assign(new Dispatcher, {
   handleViewAction: function(action){
     console.log('action', action);
-    
     this.dispatch({
       source: 'VIEW_ACTION',
       action:action
@@ -20557,7 +20665,7 @@ var AppDispatcher = assign(new Dispatcher, {
 
 module.exports = AppDispatcher;
 
-},{"flux":1,"object-assign":6}],168:[function(require,module,exports){
+},{"flux":1,"object-assign":6}],171:[function(require,module,exports){
 /** @jsx React.DOM */
 var APP = require('./components/app');
 var React = require('react');
@@ -20567,7 +20675,7 @@ React.render(
   React.createElement(APP, null),
   document.getElementById('main'));
 
-},{"./components/app":165,"react":161}],169:[function(require,module,exports){
+},{"./components/app":168,"react":161}],172:[function(require,module,exports){
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
 var assign = require('object-assign');
@@ -20664,4 +20772,4 @@ module.exports = AppStore;
 
 
 
-},{"../constants/app-constants":166,"../dispatchers/app-dispatcher":167,"events":4,"object-assign":6}]},{},[168])
+},{"../constants/app-constants":169,"../dispatchers/app-dispatcher":170,"events":4,"object-assign":6}]},{},[171])
